@@ -1,43 +1,38 @@
 <?php
 
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Redirect;
+use App\Http\Controllers\Project\ProjectController; 
+use App\Http\Controllers\Entry\EntryController;
+use App\Http\Controllers\Skillsheet\SkillsheetController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/entry/{project}/start', [EntryController::class, 'start'])
+    ->name('entry.start');
+Route::get('/entry/{project}/register', [EntryController::class, 'startRegister'])
+    ->name('entry.start.register');
+
+Route::middleware('auth')->group(function () {
+    Route::prefix('entry')->name('entry.')->group(function () {
+        Route::get('/skillsheet', [EntryController::class, 'showSkillsheet'])->name('skillsheet');
+        Route::post('/temporary-save', [EntryController::class, 'temporarySave'])->name('temporary-save');
+        Route::post('/submit', [EntryController::class, 'submit'])->name('submit');
+        Route::get('/back-to-project', [EntryController::class, 'backToProject'])->name('back-to-project');
+        Route::get('/complete', [EntryController::class, 'complete'])->name('complete');
+    });
+
+    Route::prefix('skillsheet')->name('skillsheet.')->group(function () {
+        Route::get('/', [SkillsheetController::class, 'show'])->name('show');
+        Route::post('/', [SkillsheetController::class, 'store'])->name('store');
+        Route::post('/work-experience', [SkillsheetController::class, 'storeWorkExperience'])
+            ->name('work-experience.store');
+        Route::delete('/work-experience/{experience}', [SkillsheetController::class, 'destroyWorkExperience'])
+            ->name('work-experience.destroy');
+    });
+
+    Route::get('/mypage/entries', [EntryController::class, 'index'])
+        ->name('mypage.entry');
 });
 
-//ログイン画面
-Route::get('/login/_sales', fn () => '営業ログイン画面')->name('sales.login');		//営業
-Route::get('/login/_admin', fn () => '管理者ログイン画面')->name('admin.login');	//管理者
+Route::get('/', [ProjectController::class, 'index'])->name('home');
+Route::resource('projects', ProjectController::class)->only(['index', 'show']);
 
-
-//営業
-Route::namespace('sales')
-	->name('sales.')
-	->prefix('sales')
-	//->middleware('')
-	->group(function() {
-
-	});
-
-//管理者
-Route::namespace('admin')
-	->name('admin.')
-	->prefix('admin')
-	//->middleware('')
-	->group(function() {
-
-		
-		//メール送信テスト用
-		// Route::get('mail', function () {
-		// 	Mail::raw('test mail',function ($message) {$message->to('test@to.com')->subject('test subject');});
-		// 	return 'テストメール送信完了。';
-		// });
-
-	});
-
-//マッチしなかったURLはトップ画面へリダイレクト
-Route::any('{all}', fn () => Redirect::to('/', RedirectResponse::HTTP_SEE_OTHER));
+require __DIR__.'/auth.php';
