@@ -28,7 +28,7 @@ const props = defineProps({
     }
 })
 
-const selectedArea = ref(props.filters.erea || '')
+const selectedArea = ref(props.filters.area || '')
 const selectedPrice = ref(props.filters.display_price || '')
 const selectedLanguage = ref(props.filters.language || '')
 const selectedStartDate = ref(props.filters.start || '')
@@ -38,7 +38,7 @@ const isSearching = ref(false)
 const handleSearch = () => {
     isSearching.value = true
     router.get('/', {
-        erea: selectedArea.value,
+        area: selectedArea.value,
         display_price: selectedPrice.value,
         language: selectedLanguage.value,
         start: selectedStartDate.value,
