@@ -148,10 +148,10 @@ class ProjectController extends Controller
     {
         $query = Project::query();
 
-        if ($request->filled('erea')) {
-            $areaCode = $request->get('erea');
+        if ($request->filled('area')) {
+            $areaCode = $request->get('area');
             $areaValue = decbin($areaCode - 1);
-            $query->where('erea', bindec($areaValue));
+            $query->where('area', bindec($areaValue));
         }
 
         if ($request->filled('display_price')) {
@@ -189,7 +189,7 @@ class ProjectController extends Controller
         return Inertia::render('Projects/Index', [
             'projects' => $projects,
             'filters' => $request->only([
-                'erea',
+                'area',
                 'display_price',
                 'language',
                 'start',
