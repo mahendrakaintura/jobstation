@@ -25,7 +25,7 @@ class Project extends Model
         'monthly_working_hours',
         'price',
         'start',
-        'erea',
+        'area',
         'remote',
         'business',
         'work',
