@@ -7,7 +7,7 @@ use App\Models\Project;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Support\Facades\Auth;  
+use Illuminate\Support\Facades\Auth;
 
 class ProjectController extends Controller
 {
@@ -128,7 +128,7 @@ class ProjectController extends Controller
             'バックエンド' => self::BACKEND_OPTIONS,
         ];
     }
-    
+
     private const START_OPTIONS = [
         1 => '1月',
         2 => '2月',
@@ -182,7 +182,7 @@ class ProjectController extends Controller
             $query->orderByRaw('CAST(REPLACE(REPLACE(display_price, ",", ""), "¥", "") AS UNSIGNED) DESC');
         } else {
             $query->latest('created_at');
-        } 
+        }
 
         $projects = $query->paginate(20, ['*'], 'page', $request->get('page'));
 
