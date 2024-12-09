@@ -17,6 +17,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/submit', [EntryController::class, 'submit'])->name('submit');
         Route::get('/back-to-project', [EntryController::class, 'backToProject'])->name('back-to-project');
         Route::get('/complete', [EntryController::class, 'complete'])->name('complete');
+        Route::patch('/cancel', [EntryController::class, 'cancel'])->name('cancel');
     });
 
     Route::prefix('skillsheet')->name('skillsheet.')->group(function () {
