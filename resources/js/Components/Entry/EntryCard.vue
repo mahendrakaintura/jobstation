@@ -36,7 +36,7 @@ const showCancelModal = ref(false)
                 >
                     エントリーを取り消す
                 </button>
-                <p v-else-if="entry.status_id == 2" class="text-red">エントリー取消済</p>
+                <p v-else-if="entry.status_id == 2" class="text-red-500">エントリー取消済</p>
             </div>
         </div>
     </div>
