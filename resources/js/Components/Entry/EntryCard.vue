@@ -16,7 +16,7 @@ const showCancelModal = ref(false)
     <div class="text-center flex flex-col border w-full">
         <div class="flex w-full">
             <div class="w-32 border-r">申込日</div>
-            <div class="flex-auto">{{ new Date(entry.entered_at).toISOString().split('T')[0].replace(/-/g, '/') }}</div>
+            <div class="flex-auto">{{ entry.entered_at.slice(0, 10).replace(/-/g, "/") }}</div>
         </div>
         <div class="flex w-full">
             <div class="w-32 border-r">案件名</div>
