@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Project\ProjectController; 
 use App\Http\Controllers\Entry\EntryController;
+use App\Http\Controllers\User\UserEntryController;
 use App\Http\Controllers\Skillsheet\SkillsheetController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,7 +18,6 @@ Route::middleware('auth')->group(function () {
         Route::post('/submit', [EntryController::class, 'submit'])->name('submit');
         Route::get('/back-to-project', [EntryController::class, 'backToProject'])->name('back-to-project');
         Route::get('/complete', [EntryController::class, 'complete'])->name('complete');
-        Route::patch('/cancel', [EntryController::class, 'cancel'])->name('cancel');
     });
 
     Route::prefix('skillsheet')->name('skillsheet.')->group(function () {
@@ -29,8 +29,12 @@ Route::middleware('auth')->group(function () {
             ->name('work-experience.destroy');
     });
 
-    Route::get('/mypage/entries', [EntryController::class, 'index'])
-        ->name('mypage.entry');
+    Route::prefix('mypage')->name('mypage.')->group(function () {
+        Route::prefix('entries')->name('entries.')->group(function () {
+            Route::get('/', [UserEntryController::class, 'index']);
+            Route::patch('/cancel', [UserEntryController::class, 'cancel'])->name('cancel');
+        });
+    });
 });
 
 Route::get('/', [ProjectController::class, 'index'])->name('home');

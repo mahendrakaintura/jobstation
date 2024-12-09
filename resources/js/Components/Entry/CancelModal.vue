@@ -13,7 +13,7 @@ const emit = defineEmits(['close', 'cancel'])
 
 const cancelEntry = async () => {
     try {
-        await axios.patch(route('entry.cancel'), { entry_id: entryId })
+        await axios.patch(route('mypage.entries.cancel'), { entry_id: props.entryId })
         emit('cancel')
     } catch (error) {
         console.error('取り消し操作に失敗しました', error)

@@ -99,28 +99,4 @@ class EntryController extends Controller
     {
         return Inertia::render('Entry/Complete');
     }
-
-    public function index(): Response
-    {
-        $user = auth()->user();
-        $entries = $user->entries()->with('project')->latest()->get();
-
-        return Inertia::render('Mypage/Entry', [
-            'entries' => $entries
-        ]);
-    }
-
-    public function cancel(Request $request): JsonResponse
-    {
-        $data = $request->validate(['entry_id' => 'required|integer']);
-        $user = auth()->user();
-        $cancelled = $user->entries()
-            ->where('id', $data['entry_id'])
-            ->where('status_id', 1)
-            ->update(['status_id' => 2]);
-        if ($cancelled) {
-            return response()->json(['message' => 'エントリーを取り消しました。']);
-        }
-        return response()->json(['message' => 'エントリーが見つかりません。'], 404);
-    }
 }
