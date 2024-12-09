@@ -13,22 +13,22 @@ const showCancelModal = ref(false)
 </script>
 
 <template>
-    <div class="text-center flex flex-col border w-full">
-        <div class="flex w-full">
+    <div class="text-center flex flex-col border-x border-b">
+        <div class="flex">
             <div class="w-32 border-r">申込日</div>
-            <div class="flex-auto">{{ entry.entered_at.slice(0, 10).replace(/-/g, "/") }}</div>
+            <div class="flex-1">{{ entry.entered_at.slice(0, 10).replace(/-/g, "/") }}</div>
         </div>
-        <div class="flex w-full">
+        <div class="flex">
             <div class="w-32 border-r">案件名</div>
-            <div class="flex-auto">{{ entry.project_title }}</div>
+            <div class="flex-1">{{ entry.project_title }}</div>
         </div>
-        <div class="flex w-full">
+        <div class="flex">
             <div class="w-32 border-r">種別</div>
-            <div class="flex-auto">応募</div>
+            <div class="flex-1">応募</div>
         </div>
-        <div class="flex w-full">
+        <div class="flex">
             <div class="w-32 border-r">取消</div>
-            <div class="text-center flex-auto justify-center items-center">
+            <div class="text-center flex-1 justify-center items-center">
                 <button v-if="entry.status_id == 1"
                     type="button"
                     @click="showCancelModal = true"

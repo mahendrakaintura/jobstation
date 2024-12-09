@@ -24,8 +24,8 @@ const props = defineProps({
                     <div class="bg-white p-6 shadow rounded-lg">
                         <h2 class="text-lg font-medium mb-6">応募履歴</h2>
                         <!-- // -->
-                        <div v-for="entry in entries.data" :key="entry.id" class="flex flex-col">
-                            <EntryCard :entry="entry" />
+                        <div class="border-t flex flex-col items-stretch">
+                            <EntryCard v-for="entry in entries" :key="entry.id" :entry="entry" />
                         </div>
                     </div>
                 </div>
