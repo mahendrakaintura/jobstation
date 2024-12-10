@@ -99,14 +99,4 @@ class EntryController extends Controller
     {
         return Inertia::render('Entry/Complete');
     }
-
-    public function index(): Response
-    {
-        $user = auth()->user();
-        $entries = $user->entries()->with('project')->latest()->get();
-
-        return Inertia::render('Mypage/Entry', [
-            'entries' => $entries
-        ]);
-    }
 }
