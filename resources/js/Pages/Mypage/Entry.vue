@@ -22,7 +22,6 @@ const props = defineProps({
             <div class="py-12">
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div class="bg-white p-6 shadow rounded-lg">
-                        <h2 class="text-lg font-medium mb-6">応募履歴</h2>
                         <!-- // -->
                         <div class="border-t flex flex-col items-stretch">
                             <EntryCard v-for="entry in entries" :key="entry.id" :entry="entry" />
