@@ -67,13 +67,36 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     protected $casts = [
-        'pr' => 'array',
-        'desired_work' => 'array',
-        'desired_language' => 'array',
-        'desired_place' => 'array',
-        'desired_others' => 'array',
-        'self_analysis' => 'array',
-        'skill_score' => 'array',
+
+        'pr' => 'json',
+        'desired_work' => 'json',
+        'desired_language' => 'json',
+        'desired_place' => 'json',
+        'desired_others' => 'json',
+        'self_analysis' => 'json',
+        'skill_score' => 'json',
+
+        'desired_price' => 'integer',
+        'desired_start' => 'integer',
+        'desired_remote' => 'integer',
+        'desired_area' => 'integer',
+
+        'skill_business' => 'integer',
+        'skill_work' => 'integer',
+        'skill_frontend' => 'integer',
+        'skill_backend' => 'integer',
+        'skill_framework' => 'integer',
+        'skill_web_server' => 'integer',
+        'skill_middleware' => 'integer',
+        'skill_os' => 'integer',
+        'skill_database' => 'integer',
+        'skill_environment' => 'integer',
+        'skill_cloud' => 'integer',
+        'skill_infrastructure' => 'integer',
+        'skill_tool' => 'integer',
+        'skill_design' => 'integer',
+        'skill_others' => 'integer',
+
         'is_japanese' => 'boolean',
         'email_verified_at' => 'datetime',
         'last_login_at' => 'datetime',
