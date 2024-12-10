@@ -14,25 +14,18 @@ class CreateSessionsTable extends Migration
     public function up()
     {
         Schema::create('sessions', function (Blueprint $table) {
-            // セッションID (varchar(255))
             $table->string('id', 255)->primary();
 
-            // ユーザーID (bigint unsigned)
             $table->unsignedBigInteger('user_id')->nullable();
 
-            // IPアドレス (varchar(45))
             $table->string('ip_address', 45)->nullable();
 
-            // ユーザーエージェント (text)
             $table->text('user_agent')->nullable();
 
-            // ペイロード (longtext)
             $table->longText('payload');
 
-            // 最終アクティビティのタイムスタンプ (int)
             $table->integer('last_activity');
 
-            // インデックス設定
             $table->index('user_id');
             $table->index('last_activity');
         });

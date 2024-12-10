@@ -18,6 +18,18 @@ class UserWorkExperience extends Model
         'description',
     ];
 
+    protected $casts = [
+        'framework' => 'array',
+        'frontend' => 'array',
+        'backend' => 'array',
+        'server' => 'array',
+        'database' => 'array',
+        'tool' => 'array',
+        'middleware' => 'array',
+        'os' => 'array',
+        'others' => 'array'
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
