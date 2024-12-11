@@ -75,22 +75,29 @@ class EntryController extends Controller
                 throw new \Exception('Project ID not found in session');
             }
 
+            $project = Project::findOrFail($projectId);
             $skillsheetController = new SkillsheetController();
             $skillsheetController->store($request);
+
             $entry = new \App\Models\Entry([
                 'user_id' => Auth::id(),
                 'project_id' => $projectId,
-                'status_id' => 1
+                'status_id' => 1,
+                'project_title' => $project->title,
+                'project_period' => $project->period,
+                'project_working_hours' => $project->working_hours,
+                'project_workplace' => $project->workplace,
+                'project_price' => $project->price,
+                'project_skills' => $project->skills,
+                'project_summary' => $project->summary,
+                'project_head_count' => $project->head_count,
+                'project_monthly_working_hours' => $project->monthly_working_hours
             ]);
 
             $entry->save();
             session()->forget(['entry_project_id', 'temporary_skillsheet']);
             return redirect()->route('entry.complete');
         } catch (\Exception $e) {
-            Log::error('Entry submission error:', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
             return back()->withErrors([
                 'message' => 'エントリーの登録に失敗しました',
                 'system' => $e->getMessage()
