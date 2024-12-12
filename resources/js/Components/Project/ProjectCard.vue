@@ -1,15 +1,23 @@
 <script setup>
 import { ref } from 'vue'
-import { Link, usePage } from '@inertiajs/vue3'
+import { Link, usePage, router } from '@inertiajs/vue3'
 import axios from 'axios'
 import EntryModal from '@/Components/Entry/EntryModal.vue'
+import ProjectModal from '@/Components/Project/ProjectModal.vue';
 
 const props = defineProps({
     project: {
         type: Object,
         required: true
-    }
+    },
+    isMypage: Boolean
 })
+
+const emit = defineEmits(['check'])
+
+const onCheckboxChange = (event) => {
+    emit('check', { id: props.project.id, checked: event.target.checked })
+}
 
 const page = usePage()
 const isFavorite = ref(props.project.is_favorited ?? false)
@@ -27,7 +35,17 @@ const toggleFavorite = async () => {
     }
 }
 
+const entry = async () => {
+    if (!props.isMypage) return;
+    try {
+        router.post(route('entry.'), { data: { project_ids: props.project.id } })
+    } catch (error) {
+        console.log('エントリーの登録に失敗しました', error)
+    }
+}
+
 const showEntryModal = ref(false)
+const showProjectModal = ref(false)
 </script>
 
 <template>
@@ -35,8 +53,13 @@ const showEntryModal = ref(false)
         <div class="p-3">
             <div class="flex justify-between items-center">
                 <p class="rounded-md bg-yellow-500 text-xl w-20 px-5 py-2">新着</p>
+                <input
+                    v-if="isMypage"
+                    type="checkbox"
+                    @change="onCheckboxChange"
+                />
                 <button 
-                    v-if="page.props.auth.user"
+                    v-else-if="page.props.auth.user"
                     type="button"
                     @click="toggleFavorite"
                     class="rounded text-black hover:bg-gray-400 text-lg font-bold px-5 py-1"
@@ -61,13 +84,27 @@ const showEntryModal = ref(false)
         </div>
 
         <div class="text-center flex justify-center items-center space-x-4">
-            <Link
+            <button v-if="isMypage"
+                type="button"
+                @click="showProjectModal = true"
+                class="rounded bg-blue-500 hover:bg-blue-400 text-white text-lg font-bold px-8 py-2 w-48"
+            >
+                詳細
+            </button>
+            <Link v-else
                 :href="route('projects.show', project.id)"
                 class="rounded bg-blue-500 hover:bg-blue-400 text-white text-lg font-bold px-8 py-2 w-48"
             >
                 詳細
             </Link>
-            <button
+            <button v-if="isMypage"
+                type="button"
+                @click="entry"
+                class="rounded text-white bg-blue-500 hover:bg-blue-400 text-lg font-bold py-2 w-48"
+            >
+                エントリー
+            </button>
+            <button v-else
                 type="button"
                 @click="showEntryModal = true"
                 class="rounded text-white bg-blue-500 hover:bg-blue-400 text-lg font-bold py-2 w-48"
@@ -76,10 +113,14 @@ const showEntryModal = ref(false)
             </button>
         </div>
     </div>
-
-    <EntryModal
-    :show="showEntryModal"
-    :project-id="project.id"
-    @close="showEntryModal = false"
-/>
+    <ProjectModal v-if="isMypage"
+        :show="showProjectModal"
+        :project="project"
+        @close="showProjectModal = false"
+    />
+    <EntryModal v-else
+        :show="showEntryModal"
+        :project-id="project.id"
+        @close="showEntryModal = false"
+    />
 </template>
