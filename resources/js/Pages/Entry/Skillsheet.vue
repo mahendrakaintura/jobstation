@@ -100,14 +100,12 @@ const removeExperience = (index) => {
 
 const formErrors = ref({});
 const submit = () => {
-    console.log('Form data being submitted:', form.data());
     form.post(route('entry.submit'), {
         onSuccess: () => {
-            router.visit(route('entry.complete'))
+            router.visit(route('mypage.entries.index'))
         },
         onError: (errors) => {
             formErrors.value = errors;
-            console.log('Validation errors:', errors);
             let errorMessage = '以下のエラーが発生しました：\n';
             if (errors.basicInfo) {
                 Object.entries(errors.basicInfo).forEach(([field, message]) => {

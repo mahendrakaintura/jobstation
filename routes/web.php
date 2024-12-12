@@ -17,7 +17,6 @@ Route::middleware('auth')->group(function () {
         Route::post('/temporary-save', [EntryController::class, 'temporarySave'])->name('temporary-save');
         Route::post('/submit', [EntryController::class, 'submit'])->name('submit');
         Route::get('/back-to-project', [EntryController::class, 'backToProject'])->name('back-to-project');
-        Route::get('/complete', [EntryController::class, 'complete'])->name('complete');
     });
 
     Route::prefix('skillsheet')->name('skillsheet.')->group(function () {
@@ -31,7 +30,7 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('mypage')->name('mypage.')->group(function () {
         Route::prefix('entries')->name('entries.')->group(function () {
-            Route::get('/', [UserEntryController::class, 'index']);
+            Route::get('/', [UserEntryController::class, 'index'])->name('index');
             Route::patch('/cancel', [UserEntryController::class, 'cancel'])->name('cancel');
         });
     });

@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
 use Inertia\Response as InertiaResponse;
@@ -50,7 +49,6 @@ class EntryController extends Controller
                 )
             ]);
         } catch (\Exception $e) {
-            Log::error('Error in showSkillsheet', ['error' => $e->getMessage()]);
             throw $e;
         }
     }
@@ -96,7 +94,8 @@ class EntryController extends Controller
 
             $entry->save();
             session()->forget(['entry_project_id', 'temporary_skillsheet']);
-            return redirect()->route('entry.complete');
+            return redirect()->route('mypage.entries.index')
+                ->with('alert', '応募が完了しました');
         } catch (\Exception $e) {
             return back()->withErrors([
                 'message' => 'エントリーの登録に失敗しました',
@@ -112,10 +111,5 @@ class EntryController extends Controller
             return redirect()->route('home');
         }
         return redirect()->route('projects.show', $projectId);
-    }
-
-    public function complete(): InertiaResponse
-    {
-        return Inertia::render('Entry/Complete');
     }
 }
