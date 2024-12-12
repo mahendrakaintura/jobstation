@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -10,7 +10,7 @@ use Inertia\Response;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 
-class FavoriteController extends Controller
+class UserFavoriteController extends Controller
 {
     public function index(): Response
     {

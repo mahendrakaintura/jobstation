@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Project\ProjectController; 
 use App\Http\Controllers\Entry\EntryController;
-use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\User\UserFavoriteController;
 use App\Http\Controllers\User\UserEntryController;
 use App\Http\Controllers\Skillsheet\SkillsheetController;
 use Illuminate\Support\Facades\Route;
@@ -37,8 +37,8 @@ Route::middleware('auth')->group(function () {
             Route::patch('/cancel', [UserEntryController::class, 'cancel'])->name('cancel');
         });
         Route::prefix('favorites')->name('favorites.')->group(function () {
-            Route::get('/', [FavoriteController::class, 'index']);
-            Route::delete('/destroy', [FavoriteController::class, 'destroy'])->name('destroy');
+            Route::get('/', [UserFavoriteController::class, 'index']);
+            Route::delete('/destroy', [UserFavoriteController::class, 'destroy'])->name('destroy');
         });
     });
 });
