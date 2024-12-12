@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Entry;
 
 use App\Http\Controllers\Controller;
+use App\Models\Entry;
 use App\Models\Project;
 use App\Http\Controllers\Skillsheet\SkillsheetController;
 use Illuminate\Http\Request;
@@ -103,6 +104,37 @@ class EntryController extends Controller
                 'system' => $e->getMessage()
             ])->with('error', 'エントリーの登録に失敗しました');
         }
+    }
+
+    public function entry(Request $request): HttpResponse
+    {
+        if (auth()->user()->name == '') {
+            return response()->json(['message' => 'スキルシート入力の登録が完了していません。'], 403);
+        }
+        $data = $request->validate(['project_id' => 'required|integer']);
+        $project = Project::find($data['project_id']);
+        if (!$project) {
+            return response()->json(['message' => '該当の案件が見つかりませんでした。'], 404);
+        }
+        $entry = Entry::firstOrCreate(
+            ['user_id' => Auth::id(), 'project_id' => $data['project_id']],
+            [
+                'status_id' => 1,
+                'project_title' => $project->title,
+                'project_period' => $project->period,
+                'project_working_hours' => $project->working_hours,
+                'project_workplace' => $project->workplace,
+                'project_price' => $project->price,
+                'project_skills' => $project->skills,
+                'project_summary' => $project->summary,
+                'project_head_count' => $project->head_count,
+                'project_monthly_working_hours' => $project->monthly_working_hours
+            ]
+        );
+        if ($entry->wasRecentlyCreated) {
+            return redirect()->route('mypage.entries.');
+        }
+        return response()->json(['message' => '該当の案件には既にエントリー済みです。'], 409);
     }
 
     public function backToProject(): RedirectResponse

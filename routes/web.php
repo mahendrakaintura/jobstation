@@ -14,6 +14,7 @@ Route::get('/entry/{project}/register', [EntryController::class, 'startRegister'
 
 Route::middleware('auth')->group(function () {
     Route::prefix('entry')->name('entry.')->group(function () {
+        Route::post('/', [EntryController::class, 'entry']);
         Route::get('/skillsheet', [EntryController::class, 'showSkillsheet'])->name('skillsheet');
         Route::post('/temporary-save', [EntryController::class, 'temporarySave'])->name('temporary-save');
         Route::post('/submit', [EntryController::class, 'submit'])->name('submit');
