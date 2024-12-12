@@ -12,7 +12,17 @@ const props = defineProps({
     }
 })
 
-
+onMounted(() => {
+    const page = usePage();
+    const flash = page.props.flash;
+    
+    if (flash?.message && !window.__alertShown) {
+        window.__alertShown = true;
+        window.alert(flash.message);
+        
+        router.reload({ preserveScroll: true });
+    }
+});
 </script>
 
 <template>

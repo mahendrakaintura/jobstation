@@ -15,7 +15,10 @@ class UserEntryController extends Controller
         $user = auth()->user();
         $entries = $user->entries()->with('project')->latest()->get();
         return Inertia::render('Mypage/Entry', [
-            'entries' => $entries
+            'entries' => $entries,
+            'flash' => [
+            'message' => session('alert')
+        ]
         ]);
     }
 
