@@ -35,13 +35,9 @@ const toggleFavorite = async () => {
     }
 }
 
-const entry = async () => {
-    if (!props.isMypage) return;
-    try {
-        router.post(route('entry.'), { data: { project_ids: props.project.id } })
-    } catch (error) {
-        console.log('エントリーの登録に失敗しました', error)
-    }
+const handleEntry = async () => {
+    if (!props.isMypage) showEntryModal.value = true;
+    else router.get(route('entry.start', { project: props.project.id }));
 }
 
 const showEntryModal = ref(false)
@@ -97,16 +93,9 @@ const showProjectModal = ref(false)
             >
                 詳細
             </Link>
-            <button v-if="isMypage"
+            <button
                 type="button"
-                @click="entry"
-                class="rounded text-white bg-blue-500 hover:bg-blue-400 text-lg font-bold py-2 w-48"
-            >
-                エントリー
-            </button>
-            <button v-else
-                type="button"
-                @click="showEntryModal = true"
+                @click="handleEntry"
                 class="rounded text-white bg-blue-500 hover:bg-blue-400 text-lg font-bold py-2 w-48"
             >
                 エントリー

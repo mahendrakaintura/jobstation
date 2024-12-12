@@ -10,11 +10,7 @@ const props = defineProps({
 })
 
 const entry = async () => {
-    try {
-        router.post(route('entry.'), { data: { project_ids: props.project.id } })
-    } catch (error) {
-        router.get(route('mypage.entries'))
-    }
+    router.get(route('entry.start', { project: props.project.id }));
 }
 
 const emit = defineEmits(['close'])
