@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use App\Mail\RegistrationConfirmation;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Support\Facades\Auth;
 
 class RegisteredUserController extends Controller
 {
@@ -32,6 +33,7 @@ class RegisteredUserController extends Controller
     public function store(Request $request)
     {
         try {
+            // Validation
             $validatedData = $request->validate([
                 'email' => [
                     'required',
@@ -39,16 +41,14 @@ class RegisteredUserController extends Controller
                     'lowercase',
                     'email:rfc,dns',
                     'max:255',
-                    'unique:' . User::class,
-                    'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'
+                    'unique:' . User::class
                 ],
                 'password' => [
                     'required',
                     'string',
                     'min:8',
                     'max:32',
-                    'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/',
-                    Rules\Password::defaults()
+                    'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/'
                 ],
                 'nationality' => [
                     'required',
@@ -63,19 +63,30 @@ class RegisteredUserController extends Controller
                 ]
             ], $this->messages);
 
-            $userData = [
+            $user = User::create([
                 'email' => $validatedData['email'],
                 'password' => Hash::make($validatedData['password']),
                 'nationality' => $validatedData['nationality'] === 'その他'
                     ? $validatedData['other_nationality']
                     : $validatedData['nationality'],
-            ];
-
-            Mail::to($userData['email'])->send(new RegistrationConfirmation($userData));
-
-            return back();
+            ]);
+            
+            // Convert the User model to an array
+            $userData = $user->toArray();  // Convert User model object to array
+            
+            // Send confirmation email
+            Mail::to($user->email)->send(new RegistrationConfirmation($userData));  // Pass the array instead of the User object
+            
+            // Optionally log the user in
+            Auth::login($user);
+            
+            return redirect()->route('home'); // Redirect to the home page or another route
         } catch (\Exception $e) {
-            Log::error('Registration error:', ['error' => $e->getMessage()]);
+            // Log the error for debugging
+            Log::error('Registration error', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
             return back()->withErrors(['email' => '登録処理中にエラーが発生しました。']);
         }
     }
