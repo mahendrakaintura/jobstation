@@ -33,7 +33,8 @@ const props = defineProps({
     temporaryData: {
         type: Object,
         default: null
-    }
+    },
+    isMypage: Boolean
 });
 
 const selfAnalysisItems = props.constants?.self_analysis?.items || {};
@@ -100,9 +101,10 @@ const removeExperience = (index) => {
 
 const formErrors = ref({});
 const submit = () => {
-    form.post(route('entry.submit'), {
+    form.post(route(props.isMypage ? 'mypage.skillsheet.update' : 'entry.submit'), {
         onSuccess: () => {
-            router.visit(route('mypage.entries.index'))
+            if (props.isMypage) window.alert('スキルシートを更新しました。');
+            else router.visit(route('mypage.entries.index'));
         },
         onError: (errors) => {
             formErrors.value = errors;
@@ -127,13 +129,17 @@ const temporarySave = () => {
         .then(response => {
             if (response.data.success) {
                 window.alert('入力内容を一時保存しました。')
-                window.location.href = route('home')
+                if (!props.isMypage) window.location.href = route('home')
             }
         })
         .catch(error => {
             console.error('一時保存時にエラーが発生しました:', error)
         })
 }
+
+const preview = () => {
+    //
+};
 </script>
 
 <template>
@@ -149,6 +155,10 @@ const temporarySave = () => {
                             </button>
                             <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
                                 登録
+                            </button>
+                            <button v-if="isMypage" type="button" @click="preview"
+                                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                                プレビュー
                             </button>
                         </div>
                         <h2 class="text-lg font-medium mb-6">基本情報</h2>
