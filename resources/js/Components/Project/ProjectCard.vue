@@ -25,13 +25,13 @@ const isFavorite = ref(props.project.is_favorited ?? false)
 const toggleFavorite = async () => {
     try {
         if (isFavorite.value) {
-            await axios.delete(`/favorites/${props.project.id}`)
+            await axios.delete(route('favorites.destroy', props.project.id));
         } else {
-            await axios.post(`/favorites/${props.project.id}`)
+            await axios.post(route('favorites.store', props.project.id));
         }
-        isFavorite.value = !isFavorite.value
+        isFavorite.value = !isFavorite.value;
     } catch (error) {
-        console.error('お気に入り操作に失敗しました', error)
+        isFavorite.value = originalState;
     }
 }
 
