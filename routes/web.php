@@ -5,6 +5,7 @@ use App\Http\Controllers\Entry\EntryController;
 use App\Http\Controllers\User\UserFavoriteController;
 use App\Http\Controllers\User\UserEntryController;
 use App\Http\Controllers\Skillsheet\SkillsheetController;
+use App\Http\Controllers\Favorite\FavoriteController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/entry/{project}/start', [EntryController::class, 'start'])
@@ -20,6 +21,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/submit', [EntryController::class, 'submit'])->name('submit');
         Route::get('/back-to-project', [EntryController::class, 'backToProject'])->name('back-to-project');
     });
+
+    Route::post('/favorites/{project}', [FavoriteController::class, 'store'])->name('favorites.store');
+    Route::delete('/favorites/{project}', [FavoriteController::class, 'destroy'])->name('favorites.destroy');
 
     Route::prefix('skillsheet')->name('skillsheet.')->group(function () {
         Route::get('/', [SkillsheetController::class, 'show'])->name('show');
