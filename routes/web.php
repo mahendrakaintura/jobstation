@@ -4,6 +4,7 @@ use App\Http\Controllers\Project\ProjectController;
 use App\Http\Controllers\Entry\EntryController;
 use App\Http\Controllers\User\UserEntryController;
 use App\Http\Controllers\Skillsheet\SkillsheetController;
+use App\Http\Controllers\User\UserSkillSheetController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/entry/{project}/start', [EntryController::class, 'start'])
@@ -32,6 +33,10 @@ Route::middleware('auth')->group(function () {
         Route::prefix('entries')->name('entries.')->group(function () {
             Route::get('/', [UserEntryController::class, 'index'])->name('index');
             Route::patch('/cancel', [UserEntryController::class, 'cancel'])->name('cancel');
+        });
+        Route::prefix('skillsheet')->name('skillsheet.')->group(function () {
+            Route::get('/edit', [UserSkillSheetController::class, 'edit'])->name('edit');
+            Route::post('/update', [UserSkillSheetController::class, 'update'])->name('update');
         });
     });
 });
