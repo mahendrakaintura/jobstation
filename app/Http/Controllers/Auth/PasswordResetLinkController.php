@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Password;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use App\Mail\ResetPassword;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -33,19 +35,21 @@ class PasswordResetLinkController extends Controller
             'email' => 'required|email',
         ]);
 
-        // We will send the password reset link to this user. Once we have attempted
-        // to send the link, we will examine the response then see the message we
-        // need to show to the user. Finally, we'll send out a proper response.
-        $status = Password::sendResetLink(
-            $request->only('email')
-        );
+        try {
+            $token = Str::random(64);
+            DB::table('user_password_reset_tokens')->updateOrInsert(
+                ['email' => $request->email],
+                [
+                    'email' => $request->email,
+                    'token' => $token,
+                    'created_at' => now()
+                ]
+            );
 
-        if ($status == Password::RESET_LINK_SENT) {
-            return back()->with('status', __($status));
+            Mail::to($request->email)->send(new ResetPassword($token, $request->email));
+            return back()->with('status', 'パスワード再設定用のメールを送信しました。');
+        } catch (\Exception $e) {
+            return back()->withErrors(['email' => 'メールの送信に失敗しました。']);
         }
-
-        throw ValidationException::withMessages([
-            'email' => [trans($status)],
-        ]);
     }
 }
