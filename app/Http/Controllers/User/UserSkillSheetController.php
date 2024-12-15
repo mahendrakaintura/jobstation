@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
 use Inertia\Response as InertiaResponse;
+use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
 
 class UserSkillSheetController extends Controller
@@ -22,14 +23,13 @@ class UserSkillSheetController extends Controller
                 'self_analysis' => config('constants.self_analysis')
             ];
 
-            return Inertia::render('Entry/Skillsheet', [
+            return Inertia::render('Mypage/Skillsheet', [
                 'constants' => $config,
                 'user' => auth()->user()->load('workExperiences'),
-                'temporaryData' => session('temporary_skillsheet'),
-                'isMypage' => true
+                'temporaryData' => session('temporary_skillsheet_edit'),
             ]);
         } catch (\Exception $e) {
-            Log::error('Error in showSkillsheet', [
+            Log::error('Error in editSkillsheet', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
@@ -37,12 +37,26 @@ class UserSkillSheetController extends Controller
         }
     }
 
-    public function update(Request $request): JsonResponse
+    public function temporarySave(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'skillsheet' => 'required|array'
+        ]);
+        session(['temporary_skillsheet_edit' => $data['skillsheet']]);
+        return response()->json([
+            'success' => true,
+            'message' => '入力内容を一時保存しました。'
+        ]);
+    }
+
+    public function update(Request $request): HttpResponse
     {
         try {
             $skillsheetController = new SkillsheetController();
             $skillsheetController->store($request);
-            return response()->json(['message' => 'スキルシートを更新しました。']);
+            session()->forget(['temporary_skillsheet_edit']);
+            return redirect()->back()
+                ->with('alert', 'スキルシートを更新しました。');
         } catch (\Exception $e) {
             return back()->withErrors([
                 'message' => 'スキルシートの更新に失敗しました',

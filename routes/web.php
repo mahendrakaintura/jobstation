@@ -36,6 +36,7 @@ Route::middleware('auth')->group(function () {
         });
         Route::prefix('skillsheet')->name('skillsheet.')->group(function () {
             Route::get('/edit', [UserSkillSheetController::class, 'edit'])->name('edit');
+            Route::post('/temporary-save', [EntryController::class, 'temporarySave'])->name('temporary-save');
             Route::post('/update', [UserSkillSheetController::class, 'update'])->name('update');
         });
     });
