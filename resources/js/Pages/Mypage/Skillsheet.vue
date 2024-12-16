@@ -99,10 +99,10 @@ const removeExperience = (index) => {
 };
 
 const formErrors = ref({});
-const submit = () => {
-    form.post(route('entry.submit'), {
+const update = () => {
+    form.post(route('mypage.skillsheet.update'), {
         onSuccess: () => {
-            router.visit(route('mypage.entries.index'));
+            alert('スキルシートを更新しました。');
         },
         onError: (errors) => {
             formErrors.value = errors;
@@ -118,7 +118,7 @@ const submit = () => {
 };
 
 const temporarySave = () => {
-    axios.post(route('entry.temporary-save'), {
+    axios.post(route('mypage.skillsheet.temporary-save'), {
         skillsheet: {
             basicInfo: form.basicInfo,
             experiences: form.experiences
@@ -127,12 +127,15 @@ const temporarySave = () => {
         .then(response => {
             if (response.data.success) {
                 window.alert('入力内容を一時保存しました。')
-                window.location.href = route('home')
             }
         })
         .catch(error => {
             console.error('一時保存時にエラーが発生しました:', error)
         })
+}
+
+const preview = () => {
+    //
 }
 </script>
 
@@ -141,14 +144,19 @@ const temporarySave = () => {
         <template #main>
             <div class="py-12">
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <form @submit.prevent="submit" class="bg-white p-6 shadow rounded-lg">
+                    <form @submit.prevent="update" class="bg-white p-6 shadow rounded-lg">
                         <div class="flex justify-end gap-4 mt-6">
                             <button type="button" @click="temporarySave"
                                 class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
                                 保存
                             </button>
-                            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                            <button type="submit" 
+                                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
                                 登録
+                            </button>
+                            <button type="button" @click="preview"
+                                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                                プレビュー
                             </button>
                         </div>
                         <h2 class="text-lg font-medium mb-6">基本情報</h2>
@@ -166,7 +174,7 @@ const temporarySave = () => {
                             <div>
                                 <InputLabel value="年齢*" />
                                 <SelectInput v-model="form.basicInfo.age" class="mt-1 block w-full" required>
-                                    <option v-for="age in constants?.age" :key="age" :value="age">{{ age }}歳</option>
+                                    <option v-for="age in constants?.basic_info.age" :key="age" :value="age">{{ age }}歳</option>
                                 </SelectInput>
                             </div>
                             <div>
@@ -186,7 +194,7 @@ const temporarySave = () => {
                                 <InputLabel value="実務経験年数*" />
                                 <SelectInput v-model="form.basicInfo.years_of_experience" class="mt-1 block w-full"
                                     required>
-                                    <option v-for="year in constants?.years_of_experience" :key="year" :value="year">
+                                    <option v-for="year in constants?.basic_info.years_of_experience" :key="year" :value="year">
                                         {{ year }}年
                                     </option>
                                 </SelectInput>
@@ -220,7 +228,7 @@ const temporarySave = () => {
                             <div>
                                 <InputLabel value="月単価*" />
                                 <SelectInput v-model="form.basicInfo.desired_price" class="mt-1 block w-full" required>
-                                    <option v-for="(price, key) in constants?.desired_price" :key="key" :value="key">
+                                    <option v-for="(price, key) in constants?.basic_info.desired_price" :key="key" :value="key">
                                         {{ price }}
                                     </option>
                                 </SelectInput>
@@ -228,7 +236,7 @@ const temporarySave = () => {
                             <div>
                                 <InputLabel value="稼働時期*" />
                                 <SelectInput v-model="form.basicInfo.desired_start" class="mt-1 block w-full" required>
-                                    <option v-for="(month, key) in constants?.desired_start" :key="key" :value="key">
+                                    <option v-for="(month, key) in constants?.basic_info.desired_start" :key="key" :value="key">
                                         {{ month }}
                                     </option>
                                 </SelectInput>
@@ -236,7 +244,7 @@ const temporarySave = () => {
                             <div>
                                 <InputLabel value="リモート勤務のご希望*" />
                                 <SelectInput v-model="form.basicInfo.desired_remote" class="mt-1 block w-full" required>
-                                    <option v-for="(remote, key) in constants?.desired_remote" :key="key" :value="key">
+                                    <option v-for="(remote, key) in constants?.basic_info.desired_remote" :key="key" :value="key">
                                         {{ remote }}
                                     </option>
                                 </SelectInput>
@@ -244,7 +252,7 @@ const temporarySave = () => {
                             <div>
                                 <InputLabel value="エリア*" />
                                 <SelectInput v-model="form.basicInfo.desired_area" class="mt-1 block w-full" required>
-                                    <option v-for="(area, key) in constants?.desired_area" :key="key" :value="key">
+                                    <option v-for="(area, key) in constants?.basic_info.desired_area" :key="key" :value="key">
                                         {{ area }}
                                     </option>
                                 </SelectInput>
@@ -254,31 +262,31 @@ const temporarySave = () => {
                                 <div class="space-y-2">
                                     <SelectInput v-model="form.basicInfo.desired_work.work1" class="mt-1 block w-full">
                                         <option value="">選択してください</option>
-                                        <option v-for="(work, key) in constants?.desired_work" :key="key" :value="key">
+                                        <option v-for="(work, key) in constants?.basic_info.desired_work" :key="key" :value="key">
                                             {{ work }}
                                         </option>
                                     </SelectInput>
                                     <SelectInput v-model="form.basicInfo.desired_work.work2" class="block w-full">
                                         <option value="">選択してください</option>
-                                        <option v-for="(work, key) in constants?.desired_work" :key="key" :value="key">
+                                        <option v-for="(work, key) in constants?.basic_info.desired_work" :key="key" :value="key">
                                             {{ work }}
                                         </option>
                                     </SelectInput>
                                     <SelectInput v-model="form.basicInfo.desired_work.work3" class="block w-full">
                                         <option value="">選択してください</option>
-                                        <option v-for="(work, key) in constants?.desired_work" :key="key" :value="key">
+                                        <option v-for="(work, key) in constants?.basic_info.desired_work" :key="key" :value="key">
                                             {{ work }}
                                         </option>
                                     </SelectInput>
                                     <SelectInput v-model="form.basicInfo.desired_work.work4" class="block w-full">
                                         <option value="">選択してください</option>
-                                        <option v-for="(work, key) in constants?.desired_work" :key="key" :value="key">
+                                        <option v-for="(work, key) in constants?.basic_info.desired_work" :key="key" :value="key">
                                             {{ work }}
                                         </option>
                                     </SelectInput>
                                     <SelectInput v-model="form.basicInfo.desired_work.work5" class="block w-full">
                                         <option value="">選択してください</option>
-                                        <option v-for="(work, key) in constants?.desired_work" :key="key" :value="key">
+                                        <option v-for="(work, key) in constants?.basic_info.desired_work" :key="key" :value="key">
                                             {{ work }}
                                         </option>
                                     </SelectInput>

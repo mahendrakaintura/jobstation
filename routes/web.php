@@ -5,6 +5,7 @@ use App\Http\Controllers\Entry\EntryController;
 use App\Http\Controllers\User\UserFavoriteController;
 use App\Http\Controllers\User\UserEntryController;
 use App\Http\Controllers\Skillsheet\SkillsheetController;
+use App\Http\Controllers\User\UserSkillSheetController;
 use App\Http\Controllers\Favorite\FavoriteController;
 use Illuminate\Support\Facades\Route;
 
@@ -39,6 +40,12 @@ Route::middleware('auth')->group(function () {
             Route::get('/', [UserEntryController::class, 'index'])->name('index');
             Route::patch('/cancel', [UserEntryController::class, 'cancel'])->name('cancel');
         });
+
+        Route::prefix('skillsheet')->name('skillsheet.')->group(function () {
+            Route::get('/edit', [UserSkillSheetController::class, 'edit'])->name('edit');
+            Route::post('/temporary-save', [EntryController::class, 'temporarySave'])->name('temporary-save');
+            Route::post('/update', [UserSkillSheetController::class, 'update'])->name('update');
+
         Route::prefix('favorites')->name('favorites.')->group(function () {
             Route::get('/', [UserFavoriteController::class, 'index']);
             Route::delete('/destroy', [UserFavoriteController::class, 'destroy'])->name('destroy');
