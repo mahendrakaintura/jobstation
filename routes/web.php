@@ -7,6 +7,7 @@ use App\Http\Controllers\User\UserEntryController;
 use App\Http\Controllers\Skillsheet\SkillsheetController;
 use App\Http\Controllers\User\UserSkillSheetController;
 use App\Http\Controllers\Favorite\FavoriteController;
+use App\Http\Controllers\User\UserChangePasswordController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/entry/{project}/start', [EntryController::class, 'start'])
@@ -50,6 +51,11 @@ Route::middleware('auth')->group(function () {
         Route::prefix('favorites')->name('favorites.')->group(function () {
             Route::get('/', [UserFavoriteController::class, 'index']);
             Route::delete('/destroy', [UserFavoriteController::class, 'destroy'])->name('destroy');
+        });
+
+        Route::prefix('password')->name('password.')->group(function () {
+            Route::get('/', [UserChangePasswordController::class, 'create'])->name('crate');;
+            Route::post('/store', [UserChangePasswordController::class, 'store'])->name('store');
         });
     });
 });
