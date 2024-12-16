@@ -111,6 +111,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(UserWorkExperience::class);
     }
+
     public function getHasSkillSheetAttribute(): bool
     {
         return !empty($this->name) && $this->workExperiences()->exists();
@@ -119,5 +120,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function entries()
     {
         return $this->hasMany(Entry::class);
+    }
+
+    public function favoriteProjects()
+    {
+        return $this->hasManyThrough(Project::class, UserFavoriteProject::class, 'user_id', 'id', 'id', 'project_id');
     }
 }

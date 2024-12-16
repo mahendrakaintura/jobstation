@@ -184,7 +184,11 @@ class ProjectController extends Controller
             $query->latest('created_at');
         }
 
-        $projects = $query->paginate(20, ['*'], 'page', $request->get('page'));
+        $projects = $query->with('favoriteUsers')
+            ->paginate(20, ['*'], 'page', $request->get('page'));
+        $projects->through(function ($project) {
+            return $project->append('is_favorited');
+        });
 
         return Inertia::render('Projects/Index', [
             'projects' => $projects,
@@ -209,6 +213,7 @@ class ProjectController extends Controller
 
     public function show(Project $project, Request $request): Response
     {
+        $project->append('is_favorited');
         return Inertia::render('Projects/Show', [
             'project' => $project
         ]);

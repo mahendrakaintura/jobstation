@@ -50,7 +50,7 @@ function isMypagePath(subPath="") {
                                     レコメンド
                                 </Link>
                                 <Link 
-                                    href="/mypage/favorite" 
+                                    href="/mypage/favorites" 
                                     class="rounded border border-gray-200 hover:bg-blue-400 text-white font-bold ml-3 p-2"
                                 >
                                     マイページ
