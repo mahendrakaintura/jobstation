@@ -45,6 +45,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/edit', [UserSkillSheetController::class, 'edit'])->name('edit');
             Route::post('/temporary-save', [EntryController::class, 'temporarySave'])->name('temporary-save');
             Route::post('/update', [UserSkillSheetController::class, 'update'])->name('update');
+        });
 
         Route::prefix('favorites')->name('favorites.')->group(function () {
             Route::get('/', [UserFavoriteController::class, 'index']);
