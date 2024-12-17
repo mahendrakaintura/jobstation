@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { Head, useForm } from '@inertiajs/vue3'
+import { Head, Link, useForm } from '@inertiajs/vue3'
 import { router } from '@inertiajs/vue3'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import InputLabel from '@/Components/InputLabel.vue'
@@ -133,10 +133,6 @@ const temporarySave = () => {
             console.error('一時保存時にエラーが発生しました:', error)
         })
 }
-
-const preview = () => {
-    //
-}
 </script>
 
 <template>
@@ -154,10 +150,11 @@ const preview = () => {
                                 class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
                                 登録
                             </button>
-                            <button type="button" @click="preview"
+                            <Link
+                                :href="route('mypage.skillsheet.preview')"
                                 class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
                                 プレビュー
-                            </button>
+                            </Link>
                         </div>
                         <h2 class="text-lg font-medium mb-6">基本情報</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

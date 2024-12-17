@@ -11,7 +11,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
 use Inertia\Response as InertiaResponse;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
-
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class UserSkillSheetController extends Controller
 {
@@ -63,5 +63,19 @@ class UserSkillSheetController extends Controller
                 'system' => $e->getMessage()
             ])->with('error', 'スキルシートの更新に失敗しました');
         }
+    }
+
+    public function preview()
+    {
+        $data = [
+            'user' => auth()->user()->load('workExperiences')
+        ];
+        $pdf = Pdf::loadView('/pdf/skillsheet', $data);
+        $pdf->setPaper('A4');
+        $pdf->render();
+        $pdfData = base64_encode($pdf->output());
+        return Inertia::render('Mypage/SkillsheetPdf', [
+            'pdfData' => $pdfData
+        ]);
     }
 }

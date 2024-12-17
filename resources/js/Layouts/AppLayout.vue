@@ -111,7 +111,7 @@ function isMypagePath(subPath="") {
             </Link>
             <Link 
                 href="/mypage/skillsheet/edit"
-                :class="isMypagePath('skillsheet/edit') ? 'bg-blue-500' : 'bg-gray-300'"
+                :class="isMypagePath('skillsheet') ? 'bg-blue-500' : 'bg-gray-300'"
                 class="rounded hover:bg-blue-500 font-bold p-2 grow"
             >
                 スキルシート更新
