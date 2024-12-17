@@ -85,7 +85,7 @@ function isMypagePath(subPath="") {
             </div>
             <div :class="isOpen ? 'block' : 'hidden'" class="md:hidden">
                 <div class="overflow-hidden px-2 pb-5 pt-2">
-                    <Link href="/" class="text-white font-bold w-56">ホーム</Link><br>
+                    <Link href="/" class="text-white font-bold w-56">ホーム</Link><br>  
                     <Link href="/about" class="text-white font-bold w-56 mt-2">ジョブステーションとは</Link>
                     <Link href="/service" class="text-white font-bold w-56 mt-2">サービスの流れ</Link>
                 </div>

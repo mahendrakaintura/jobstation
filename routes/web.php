@@ -5,6 +5,7 @@ use App\Http\Controllers\Entry\EntryController;
 use App\Http\Controllers\User\UserEntryController;
 use App\Http\Controllers\Skillsheet\SkillsheetController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PageController;
 
 Route::get('/entry/{project}/start', [EntryController::class, 'start'])
     ->name('entry.start');
@@ -38,6 +39,8 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/', [ProjectController::class, 'index'])->name('home');
+Route::get('/about', [PageController::class, 'about'])->name('about');
+
 Route::resource('projects', ProjectController::class)->only(['index', 'show']);
 
 require __DIR__.'/auth.php';
