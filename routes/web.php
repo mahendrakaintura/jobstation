@@ -8,6 +8,7 @@ use App\Http\Controllers\Skillsheet\SkillsheetController;
 use App\Http\Controllers\User\UserSkillSheetController;
 use App\Http\Controllers\Favorite\FavoriteController;
 use App\Http\Controllers\User\UserChangePasswordController;
+use App\Http\Controllers\User\UserDeletionController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/entry/{project}/start', [EntryController::class, 'start'])
@@ -55,8 +56,13 @@ Route::middleware('auth')->group(function () {
         });
 
         Route::prefix('password')->name('password.')->group(function () {
-            Route::get('/', [UserChangePasswordController::class, 'create'])->name('crate');;
+            Route::get('/', [UserChangePasswordController::class, 'create'])->name('crate');
             Route::post('/store', [UserChangePasswordController::class, 'store'])->name('store');
+        });
+
+        Route::prefix('unregister')->name('unregister.')->group(function () {
+            Route::get('/', [UserDeletionController::class, 'index'])->name('index');
+            Route::delete('/destroy', [UserDeletionController::class, 'destroy'])->name('destroy');
         });
     });
 });
