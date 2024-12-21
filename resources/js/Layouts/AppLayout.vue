@@ -26,11 +26,11 @@ function isCurrentPath(path) {
         <nav class="border-b border-gray-300 bg-blue-600 fixed top-0 w-full z-50">
             <div class="px-2 sm:px-6 lg:px-8">
                 <div class="relative h-16 flex items-center justify-between">
-                    <!-- Logo -->
+                    
                     <Link href="/" class="flex-shrink-0">
                         <img src="/img/logo.png" class="h-12" alt="ロゴ">
                     </Link>
-                    <!-- Desktop Navigation -->
+                    
                     <div class="hidden lg:flex items-center justify-end space-x-4">
                         <Link href="/" class="text-white font-bold hover:text-gray-200">ホーム</Link>
                         <Link href="/about" class="text-white font-bold hover:text-gray-200">ジョブステーションとは</Link>
@@ -47,7 +47,7 @@ function isCurrentPath(path) {
 
                         <Link href="/" class="rounded border text-center text-sm text-white font-bold p-1">企業様の<br>お問い合わせはこちら</Link>
                     </div>
-                    <!-- Mobile Menu Button -->
+                    
                     <div class="flex lg:hidden">
                         <button type="button" @click="isOpen = !isOpen" class="inline-flex items-center justify-center rounded-md p-2 text-white hover:bg-blue-500 focus:outline-none">
                             <svg class="h-6 w-6 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -65,7 +65,7 @@ function isCurrentPath(path) {
                     </div>
                 </div>
             </div>
-            <!-- Mobile Navigation -->
+            
             <div class="fixed top-16 right-0 h-full w-64 bg-blue-600 transform transition-transform duration-300 ease-in-out lg:hidden" :class="isOpen ? 'translate-x-0' : 'translate-x-full'">
                 <div class="py-2">
                     <Link href="/" :class="{'bg-blue-700': isCurrentPath('/')}" class="block px-4 py-3 text-base font-medium text-white hover:bg-blue-500 border-t border-b border-blue-400" @click="isOpen = false">
