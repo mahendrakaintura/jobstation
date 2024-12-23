@@ -65,7 +65,9 @@ const emit = defineEmits(['close'])
                     <button
                         type="button"
                         @click="entry"
-                        class="rounded bg-blue-500 hover:bg-blue-400 text-white text-base font-bold px-8 py-2"
+                        :disabled="project.has_entry"
+                        :class="project.has_entry ? 'bg-gray-500' : 'bg-blue-500 hover:bg-blue-400'"
+                        class="rounded text-white text-base font-bold px-8 py-2"
                     >
                         エントリー
                     </button>

@@ -96,7 +96,9 @@ const showProjectModal = ref(false)
             <button
                 type="button"
                 @click="handleEntry"
-                class="rounded text-white bg-blue-500 hover:bg-blue-400 text-lg font-bold py-2 w-48"
+                :disabled="project.has_entry"
+                :class="project.has_entry ? 'bg-gray-500' : 'bg-blue-500 hover:bg-blue-400'"
+                class="rounded text-white text-lg font-bold py-2 w-48"
             >
                 エントリー
             </button>
