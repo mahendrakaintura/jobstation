@@ -1,18 +1,13 @@
 <script setup>
 import { ref } from 'vue'
 import { Link, router } from '@inertiajs/vue3'
-import MypageMenu from '@/Components/MypageMenu.vue';
+import MypageMenu from '@/Pages/User/MypageMenu.vue';
 
 const isOpen = ref(false)
 const logout = () => {
     router.post(route('logout'))
 }
 
-function isMypagePath(subPath="") {
-    const path = window.location.pathname;
-    const fullPath = subPath ? `/mypage/${subPath}` : "/mypage";
-    return path === fullPath || path.startsWith(`${fullPath}/`);
-}
 function isCurrentPath(path) {
     const currentPath = window.location.pathname;
     if (path.startsWith('/mypage')) {
