@@ -18,10 +18,9 @@ const emit = defineEmits(['close'])
 
 <template>
     <div v-if="show" @click="$emit('close')"
-        class="fixed top-0 left-0 flex items-center justify-center bg-gray-500 bg-opacity-90 w-full h-full z-10">
-        <div class="container px-5 py-8 sm:w-[500px]" @click.stop>
-            <!-- 案件詳細コンテンツ -->
-            <div class="mx-w-2xl mx-auto bg-white rounded-md shadow-sm p-6">
+        class="fixed top-0 left-0 flex items-center justify-center bg-gray-500 bg-opacity-90 w-full h-full z-10 h">
+        <div class="container px-5 py-8 sm:w-[500px] h-4/5" @click.stop>
+            <div class="mx-w-2xl mx-auto bg-white rounded-md shadow-sm p-6 h-full flex flex-col justify-between">
                 <div class="mt-4 space-y-4 overflow-y-auto">
                     <section>
                         <h2 class="text-base font-bold text-gray-900">◎ 件名</h2>
@@ -65,7 +64,9 @@ const emit = defineEmits(['close'])
                     <button
                         type="button"
                         @click="entry"
-                        class="rounded bg-blue-500 hover:bg-blue-400 text-white text-base font-bold px-8 py-2"
+                        :disabled="project.has_entry"
+                        :class="project.has_entry ? 'bg-gray-500' : 'bg-blue-500 hover:bg-blue-400'"
+                        class="rounded text-white text-base font-bold px-8 py-2"
                     >
                         エントリー
                     </button>
