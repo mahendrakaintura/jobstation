@@ -50,7 +50,7 @@ function isMypagePath(subPath="") {
                 退会
             </Link>
         </div>
-        <div class="fixed left-10 flex sm:hidden pt-4 w-40" @mouseover="isOpen = true" @mouseleave="isOpen = false">
+        <div class="fixed left-10 flex sm:hidden pt-4 w-44" @mouseover="isOpen = true" @mouseleave="isOpen = false">
             <div class="flex flex-col rounded bg-blue-500 font-bold p-2 grow border-2 border-blue-50">
                 <div class="text-white flex">
                     <svg class="text-white h-6 w-6 fill-current">

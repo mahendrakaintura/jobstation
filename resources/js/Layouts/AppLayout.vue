@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { Link, router } from '@inertiajs/vue3'
-import MypageMenu from '@/Pages/User/MypageMenu.vue';
+import MypageMenu from '@/Components/User/MypageMenu.vue';
 
 const isOpen = ref(false)
 const logout = () => {
