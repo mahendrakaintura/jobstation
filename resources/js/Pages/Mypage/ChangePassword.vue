@@ -1,10 +1,9 @@
 <script setup>
-import { Head, useForm, router } from '@inertiajs/vue3';
-import InputError from '@/Components/InputError.vue';
+import { Head, useForm } from '@inertiajs/vue3';
 import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
+import { ref } from 'vue';
 
 const form = useForm({
     password: '',
@@ -23,6 +22,9 @@ const submit = () => {
         }
     });
 };
+
+const showPassword = ref(false);
+const showPasswordConfirmation = ref(false);
 </script>
 
 <template>
@@ -30,39 +32,64 @@ const submit = () => {
     <AppLayout>
         <template #main>
             <div class="py-12">
-                <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <form @submit.prevent="submit" class="bg-white p-6 shadow rounded-lg flex flex-col">
-                        <h2>パスワード変更</h2>
-                        <div class="flex justify-center mb-4 gap-4 items-center">
-                            <InputLabel for="password" value="新しいパスワード" />
-                            <span class="text-red-500">必須</span>
-                            <TextInput
-                                id="password"
-                                type="password"
-                                class="self-center"
-                                v-model="form.password"
-                                required
-                                autocomplete="new-password"
-                            />
-                            <InputError :message="form.errors.password" class="mt-2" />
-                        </div>
-                        <div class="flex justify-center mb-4s gap-4 items-center">
-                            <InputLabel for="password_confirmation" value="新しいパスワード（確認用）" />
-                            <span class="text-red-500">必須</span>
-                            <TextInput
-                                id="password_confirmation"
-                                type="password"
-                                class="self-center"
-                                v-model="form.password_confirmation"
-                                required
-                                autocomplete="new-password"
-                            />
-                            <InputError :message="form.errors.password_confirmation" class="mt-2" />
+                <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
+                    <form @submit.prevent="submit" class="bg-white py-10 shadow rounded-lg flex flex-col gap-4">
+                        <div class="flex flex-col sm:grid grid-cols-2 justify-center mb-4 gap-4 items-center">
+                            <div class="flex items-center gap-2 sm:gap-11 justify-self-end pl-6 sm:pl-0">
+                                <InputLabel for="password" value="新しいパスワード" />
+                                <span class="text-red-500">必須</span>
+                            </div>
+                            <div class="flex items-center gap-2 pl-8 sm:pl-0">
+                                <TextInput
+                                    id="password"
+                                    :type="showPassword ? 'text' : 'password'"
+                                    class="self-center"
+                                    v-model="form.password"
+                                    required
+                                    autocomplete="new-password"
+                                />
+                                <button
+                                    type="button"
+                                    class="toggle-password"
+                                    @click="showPassword = !showPassword"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                                        <path d="M0 0h24v24H0V0z" fill="none"/>
+                                        <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="block sm:hidden"></div>
+                            <div class="flex items-center gap-2 justify-self-end pl-6 sm:pl-0">
+                                <InputLabel for="password_confirmation" value="新しいパスワード（確認用）" />
+                                <span class="text-red-500">必須</span>
+                            </div>
+                            <div class="flex items-center gap-2 pl-8 sm:pl-0">
+                                <TextInput
+                                    id="password_confirmation"
+                                    :type="showPasswordConfirmation ? 'text' : 'password'"
+                                    class="self-center"
+                                    v-model="form.password_confirmation"
+                                    required
+                                    autocomplete="new-password"
+                                />
+                                <button
+                                    type="button"
+                                    class="toggle-password"
+                                    @click="showPasswordConfirmation = !showPasswordConfirmation"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                                        <path d="M0 0h24v24H0V0z" fill="none"/>
+                                        <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
                         <div class="flex items-center justify-center mt-4">
-                            <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                            <button type="submit" 
+                                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
                                 変更する
-                            </PrimaryButton>
+                            </button>
                         </div>
                     </form>
                 </div>
