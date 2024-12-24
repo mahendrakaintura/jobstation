@@ -50,9 +50,9 @@ function isMypagePath(subPath="") {
                 退会
             </Link>
         </div>
-        <div class="fixed left-10 flex sm:hidden pt-4 w-44" @mouseover="isOpen = true" @mouseleave="isOpen = false">
+        <div class="fixed left-10 flex sm:hidden pt-4 w-44">
             <div class="flex flex-col rounded bg-blue-500 font-bold p-2 grow border-2 border-blue-50">
-                <div class="text-white flex">
+                <button class="text-white flex" @click="isOpen = !isOpen">
                     <svg class="text-white h-6 w-6 fill-current">
                         <path v-show="!isOpen" d="M6.5,8.5l6,7l6-7H6.5z"/>
                         <path v-show="isOpen" d="M18.5,15.5l-6-7l-6,7H18.5z"/>
@@ -60,8 +60,8 @@ function isMypagePath(subPath="") {
                     <div class="w-full text-center">
                         {{ isMypagePath('favorites') ? 'お気に入り' : isMypagePath('entries') ? '応募履歴' : isMypagePath('skillsheet') ? 'スキルシート更新' : isMypagePath('password') ? 'パスワード変更' : '退会' }}
                     </div>
-                </div>
-                <div :class="isOpen ? 'block' : 'hidden'" @mouseover="isOpen = true" @mouseleave="isOpen = false">
+                </button>
+                <div :class="isOpen ? 'block' : 'hidden'">
                     <div class="overflow-hidden px-2 pb-5 pt-2 flex flex-col items-start">
                         <Link
                             href="/mypage/favorites"
