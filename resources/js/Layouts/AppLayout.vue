@@ -1,17 +1,13 @@
 <script setup>
 import { ref } from 'vue'
 import { Link, router } from '@inertiajs/vue3'
+import MypageMenu from '@/Components/User/MypageMenu.vue';
 
 const isOpen = ref(false)
 const logout = () => {
     router.post(route('logout'))
 }
 
-function isMypagePath(subPath="") {
-    const path = window.location.pathname;
-    const fullPath = subPath ? `/mypage/${subPath}` : "/mypage";
-    return path === fullPath || path.startsWith(`${fullPath}/`);
-}
 function isCurrentPath(path) {
     const currentPath = window.location.pathname;
     if (path.startsWith('/mypage')) {
@@ -104,43 +100,7 @@ function isCurrentPath(path) {
     </header>
 
     <main class="bg-blue-50 mt-16">
-        <nav v-if="isMypagePath()" class="flex gap-4 pt-5 text-center max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <Link 
-                href="/mypage/favorites"
-                :class="isMypagePath('favorites') ? 'bg-blue-500' : 'bg-gray-300'"
-                class="rounded hover:bg-blue-500 font-bold p-2 grow"
-            >
-                お気に入り
-            </Link>
-            <Link 
-                href="/mypage/entries"
-                :class="isMypagePath('entries') ? 'bg-blue-500' : 'bg-gray-300'"
-                class="rounded hover:bg-blue-500 font-bold p-2 grow"
-            >
-                応募履歴
-            </Link>
-            <Link 
-                href="/mypage/skillsheet/edit"
-                :class="isMypagePath('skillsheet') ? 'bg-blue-500' : 'bg-gray-300'"
-                class="rounded hover:bg-blue-500 font-bold p-2 grow"
-            >
-                スキルシート更新
-            </Link>
-            <Link 
-                href="/mypage/password"
-                :class="isMypagePath('password') ? 'bg-blue-500' : 'bg-gray-300'"
-                class="rounded hover:bg-blue-500 font-bold p-2 grow"
-            >
-                パスワード変更
-            </Link>
-            <Link 
-                href="/mypage/unregister"
-                :class="isMypagePath('unregister') ? 'bg-blue-500' : 'bg-gray-300'"
-                class="rounded hover:bg-blue-500 font-bold p-2 grow"
-            >
-                退会
-            </Link>
-        </nav>
+        <MypageMenu />
         <slot name="main"></slot>
     </main>
     
