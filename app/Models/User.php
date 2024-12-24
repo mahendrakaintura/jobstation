@@ -124,6 +124,9 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function favoriteProjects()
     {
-        return $this->hasManyThrough(Project::class, UserFavoriteProject::class, 'user_id', 'id', 'id', 'project_id');
+        return $this->hasManyThrough(Project::class, UserFavoriteProject::class, 'user_id', 'id', 'id', 'project_id')
+            ->withCount(['entries as has_entry' => function ($query) {
+                $query->where('user_id', $this->id);
+            }]);
     }
 }
