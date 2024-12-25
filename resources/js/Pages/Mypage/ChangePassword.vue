@@ -32,7 +32,7 @@ const showPasswordConfirmation = ref(false);
     <AppLayout>
         <template #main>
             <div class="py-12">
-                <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
+                <div class="max-w-5xl mx-auto px-6">
                     <form @submit.prevent="submit" class="bg-white py-10 shadow rounded-lg flex flex-col gap-4">
                         <div class="flex flex-col sm:grid grid-cols-2 justify-center mb-4 gap-4 items-center">
                             <div class="flex items-center gap-2 sm:gap-11 justify-self-end pl-6 sm:pl-0">
