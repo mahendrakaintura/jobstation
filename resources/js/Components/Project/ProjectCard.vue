@@ -1,117 +1,115 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { Link, usePage, router } from '@inertiajs/vue3'
 import axios from 'axios'
 import EntryModal from '@/Components/Entry/EntryModal.vue'
-import ProjectModal from '@/Components/Project/ProjectModal.vue';
+import ProjectModal from '@/Components/Project/ProjectModal.vue'
 
 const props = defineProps({
-    project: {
-        type: Object,
-        required: true
-    },
-    isMypage: Boolean
+  project: Object,
+  isMypage: Boolean
 })
 
 const emit = defineEmits(['check'])
-
-const onCheckboxChange = (event) => {
-    emit('check', { id: props.project.id, checked: event.target.checked })
-}
-
 const page = usePage()
+
 const isFavorite = ref(props.project.is_favorited ?? false)
-
-const toggleFavorite = async () => {
-    try {
-        if (isFavorite.value) {
-            await axios.delete(route('favorites.destroy', props.project.id));
-        } else {
-            await axios.post(route('favorites.store', props.project.id));
-        }
-        isFavorite.value = !isFavorite.value;
-    } catch (error) {
-        isFavorite.value = originalState;
-    }
-}
-
-const handleEntry = async () => {
-    if (!props.isMypage) showEntryModal.value = true;
-    else router.get(route('entry.start', { project: props.project.id }));
-}
-
 const showEntryModal = ref(false)
 const showProjectModal = ref(false)
+
+const isNew = computed(() => {
+  const diffDays = Math.ceil((new Date() - new Date(props.project.created_at)) / (1000 * 60 * 60 * 24))
+  return diffDays <= 14
+})
+
+const toggleFavorite = async () => {
+  const originalState = isFavorite.value
+  try {
+    isFavorite.value = !isFavorite.value
+    const method = originalState ? 'delete' : 'post'
+    await axios[method](route('favorites.store', props.project.id))
+  } catch {
+    isFavorite.value = originalState
+  }
+}
+
+const handleEntry = () => {
+  if (props.isMypage) {
+    router.get(route('entry.start', { project: props.project.id }))
+  } else {
+    showEntryModal.value = true
+  }
+}
+
+const saveScrollPosition = () => {
+  if (typeof window !== 'undefined') {
+    const position = window.pageYOffset || document.documentElement.scrollTop
+    sessionStorage.setItem('lastScrollPosition', position.toString())
+  }
+}
 </script>
 
 <template>
-    <div class="rounded-md border border-gray-300 bg-white p-10">
-        <div class="p-3">
-            <div class="flex justify-between items-center">
-                <p class="rounded-md bg-yellow-500 text-xl w-20 px-5 py-2">新着</p>
-                <input
-                    v-if="isMypage"
-                    type="checkbox"
-                    @change="onCheckboxChange"
-                />
-                <button 
-                    v-else-if="page.props.auth.user"
-                    type="button"
-                    @click="toggleFavorite"
-                    class="rounded text-black hover:bg-gray-400 text-lg font-bold px-5 py-1"
-                    :class="isFavorite ? 'bg-yellow-200' : 'bg-gray-300'"
-                >
-                    {{ isFavorite ? 'お気に入り済み' : 'お気に入りへ追加' }}
-                </button>
-            </div>
+  <div class="rounded-md border border-gray-300 bg-white p-4 sm:p-6 lg:p-10">
+    <div class="p-2 sm:p-3">
+      <div class="flex flex-wrap sm:flex-nowrap justify-between items-center gap-4">
+        <p v-if="isNew" class="rounded-md bg-yellow-500 text-base sm:text-xl w-16 sm:w-20 px-3 sm:px-5 py-1 sm:py-2 text-center">新着</p>
+        <div v-else class="w-16 sm:w-20"></div>
 
-            <h2 class="mt-3 p-2">{{ project.title }}</h2>
-            <p class="text-xl font-bold p-2">
-                ◎ エリア：{{ project.workplace }}　
-                ◎ リモート：{{ project.remote ? 'あり' : 'なし' }}　
-                ◎ 国籍：{{ project.is_only_japanese ? '日本人のみ' : '不問' }}
-            </p>
-            <p class="text-xl font-bold p-2">■ 月単価：{{ project.display_price }}</p>
-            <p class="text-xl font-bold p-2">■ スキル：{{ project.skills }}</p>
-            <p class="text-xl font-bold p-2">
-                ■ 概要・内容：
-                <span class="text-base">{{ project.summary }}</span>
-            </p>
-        </div>
+        <template v-if="isMypage">
+          <input type="checkbox" @change="$emit('check', { id: project.id, checked: $event.target.checked })" class="h-5 w-5" />
+        </template>
+        <template v-else-if="page.props.auth.user">
+          <button @click="toggleFavorite" 
+                  :class="isFavorite ? 'bg-yellow-200' : 'bg-gray-300'"
+                  class="sm:w-auto rounded text-black text-base sm:text-lg font-bold px-3 sm:px-5 py-1 justify-end">
+            {{ isFavorite ? 'お気に入り済み' : 'お気に入りへ追加' }}
+          </button>
+        </template>
+      </div>
 
-        <div class="text-center flex justify-center items-center space-x-4">
-            <button v-if="isMypage"
-                type="button"
-                @click="showProjectModal = true"
-                class="rounded bg-blue-500 hover:bg-blue-400 text-white text-lg font-bold px-8 py-2 w-48"
-            >
-                詳細
-            </button>
-            <Link v-else
-                :href="route('projects.show', project.id)"
-                class="rounded bg-blue-500 hover:bg-blue-400 text-white text-lg font-bold px-8 py-2 w-48"
-            >
-                詳細
-            </Link>
-            <button
-                type="button"
-                @click="handleEntry"
-                :disabled="project.has_entry"
-                :class="project.has_entry ? 'bg-gray-500' : 'bg-blue-500 hover:bg-blue-400'"
-                class="rounded text-white text-lg font-bold py-2 w-48"
-            >
-                エントリー
-            </button>
+      <h2 class="mt-3 p-2 text-lg sm:text-xl font-bold break-all">{{ project.title }}</h2>
+      
+      <div class="space-y-2 sm:space-y-3 mt-4">
+        <p class="text-base sm:text-xl font-bold p-2">
+          <span class="block sm:inline">◎ エリア：{{ project.workplace }}</span>
+          <span class="block sm:inline sm:ml-4">◎ リモート：{{ project.remote ? 'あり' : 'なし' }}</span>
+          <span class="block sm:inline sm:ml-4">◎ 国籍：{{ project.is_only_japanese ? '日本人のみ' : '不問' }}</span>
+        </p>
+        <p class="text-base sm:text-xl font-bold p-2">■ 月単価：{{ project.display_price }}</p>
+        <p class="text-base sm:text-xl font-bold p-2">■ スキル：<span class="break-all">{{ project.skills }}</span></p>
+        <div class="text-base sm:text-xl font-bold p-2">
+          <p class="mb-1">■ 概要・内容：</p>
+          <p class="text-sm sm:text-base font-normal break-all">{{ project.summary }}</p>
         </div>
+      </div>
     </div>
-    <ProjectModal v-if="isMypage"
-        :show="showProjectModal"
-        :project="project"
-        @close="showProjectModal = false"
-    />
-    <EntryModal v-else
-        :show="showEntryModal"
-        :project-id="project.id"
-        @close="showEntryModal = false"
-    />
+
+    <div class="text-center flex flex-col sm:flex-row justify-center items-center space-y-3 sm:space-y-0 sm:space-x-4 mt-4">
+      <template v-if="isMypage">
+        <button @click="showProjectModal = true" 
+                class="w-full sm:w-48 rounded bg-blue-500 hover:bg-blue-400 text-white text-base sm:text-lg font-bold px-4 sm:px-8 py-2">
+          詳細
+        </button>
+      </template>
+      <template v-else>
+        <Link :href="route('projects.show', project.id)"
+                :preserve-state="true"
+                @click="saveScrollPosition"
+                class="w-full sm:w-48 rounded bg-blue-500 hover:bg-blue-400 text-white text-base sm:text-lg font-bold px-4 sm:px-8 py-2">
+            詳細
+        </Link>
+      </template>
+      
+      <button @click="handleEntry"
+              :disabled="project.has_entry"
+              :class="project.has_entry ? 'bg-gray-500' : 'bg-blue-500 hover:bg-blue-400'"
+              class="w-full sm:w-48 rounded text-white text-base sm:text-lg font-bold py-2">
+        エントリー
+      </button>
+    </div>
+  </div>
+
+  <ProjectModal v-if="isMypage" :show="showProjectModal" :project="project" @close="showProjectModal = false" />
+  <EntryModal v-else :show="showEntryModal" :project-id="project.id" @close="showEntryModal = false" />
 </template>
