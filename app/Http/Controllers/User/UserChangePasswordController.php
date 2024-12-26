@@ -14,7 +14,7 @@ class UserChangePasswordController extends Controller
 {
     public function create(): Response
     {
-        return Inertia::render('User/ChangePassword');
+        return Inertia::render('Mypage/ChangePassword');
     }
 
     public function store(Request $request): RedirectResponse
