@@ -11,16 +11,27 @@ const form = useForm({
 });
 
 const submit = () => {
+    const errors = validatePassword();
+    if (errors.length > 0) {
+        window.alert('- ' + errors.join('\n- '));
+        return;
+    }
     form.post(route('mypage.password.store'), {
         onSuccess: () => {
             form.reset();
             window.alert('パスワードを変更しました。')
         },
         onError: (errors) => {
-            console.error(errors);
-            window.alert(`${errors.message}\n${errors.system}`)
+            window.alert(`${errors.message}\n- ${errors.system}`)
         }
     });
+};
+
+const validatePassword = () => {
+    const errors = [];
+    if (form.password.length < 8) errors.push('パスワードは8文字以上で入力してください。');
+    if (form.password !== form.password_confirmation) errors.push('確認用パスワードが一致しません。');
+    return errors;
 };
 
 const showPassword = ref(false);
