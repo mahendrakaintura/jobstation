@@ -73,59 +73,16 @@ function isCurrentPath(path) {
                         </div>
                     </div>
                 </div>
-
-                <div class="fixed top-16 right-0 h-full w-64 bg-blue-600 transform transition-transform duration-300 ease-in-out lg:hidden"
-                    :class="isOpen ? 'translate-x-0' : 'translate-x-full'">
-                    <div class="py-2">
-                        <Link href="/" :class="{ 'bg-blue-700': isCurrentPath('/') }"
-                            class="block px-4 py-3 text-base font-medium text-white hover:bg-blue-500 border-t border-b border-blue-400"
-                            @click="isOpen = false">
-                        ホーム
-                        </Link>
-                        <Link href="/about" :class="{ 'bg-blue-700': isCurrentPath('/about') }"
-                            class="block px-4 py-3 text-base font-medium text-white hover:bg-blue-500 border-b border-blue-400"
-                            @click="isOpen = false">
-                        ジョブステーションとは
-                        </Link>
-                        <Link href="/service" :class="{ 'bg-blue-700': isCurrentPath('/service') }"
-                            class="block px-4 py-3 text-base font-medium text-white hover:bg-blue-500 border-b border-blue-400"
-                            @click="isOpen = false">
-                        サービスの流れ
-                        </Link>
-
-                        <template v-if="$page.props.auth.user">
-                            <Link href="/mypage/favorites" :class="{ 'bg-blue-700': isCurrentPath('/mypage/') }"
-                                class="block px-4 py-3 text-base font-medium text-white hover:bg-blue-500 border-b border-blue-400"
-                                @click="isOpen = false">
-                            マイページ
-                            </Link>
-                            <button @click="logout"
-                                class="w-full text-left px-4 py-3 text-base font-medium text-white hover:bg-blue-500 border-b border-blue-400">
-                                ログアウト
-                            </button>
-                        </template>
-                        <template v-else>
-                            <Link href="/register" :class="{ 'bg-blue-700': isCurrentPath('/register') }"
-                                class="block px-4 py-3 text-base font-medium text-white hover:bg-blue-500 border-b border-blue-400"
-                                @click="isOpen = false">
-                            会員登録
-                            </Link>
-                            <Link href="/login" :class="{ 'bg-blue-700': isCurrentPath('/login') }"
-                                class="block px-4 py-3 text-base font-medium text-white hover:bg-blue-500 border-b border-blue-400"
-                                @click="isOpen = false">
-                            ログイン
-                            </Link>
-                        </template>
-
-                        <Link href="/contact" :class="{ 'bg-blue-700': isCurrentPath('/contact') }"
-                            class="block px-4 py-3 text-base font-medium text-white hover:bg-blue-500 border-b border-blue-400"
-                            @click="isOpen = false">
-                        企業様のお問い合わせはこちら
-                        </Link>
-                    </div>
+            </div>
+            <div :class="isOpen ? 'block' : 'hidden'" class="md:hidden">
+                <div class="overflow-hidden px-2 pb-5 pt-2">
+                    <Link href="/" class="text-white font-bold w-56">ホーム</Link><br>
+                    <Link href="/about" class="text-white font-bold w-56 mt-2">ジョブステーションとは</Link>
+                    <Link href="/service" class="text-white font-bold w-56 mt-2">サービスの流れ</Link>
                 </div>
-            </nav>
-        </header>
+            </div>
+        </nav>
+    </header>
 
         <main class="bg-blue-50 mt-16 flex-grow">
             <MypageMenu />

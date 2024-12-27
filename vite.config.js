@@ -1,6 +1,7 @@
 import { defineConfig, loadEnv } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
+import path from 'path';
 
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, process.cwd());
@@ -25,7 +26,24 @@ export default defineConfig(({ mode }) => {
                         includeAbsolute: false,
                     },
                 },
+<<<<<<< HEAD
             }),
         ],
     };
 });
+=======
+            },
+        }),
+    ],
+    build: {
+        manifest: true,          // Enable manifest generation
+        outDir: 'public/build',  // Specify output directory
+        assetsDir: 'assets',     // Directory for assets (optional)
+    },
+    resolve: {
+        alias: {
+            '@': path.resolve(__dirname, 'resources/js'),
+        },
+    },
+});
+>>>>>>> origin/feature/jbst-04
